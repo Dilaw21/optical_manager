@@ -1,29 +1,35 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useFrappeSession } from './hooks/userFrappeSession';
 import Login from './components/Login';
+import CustomerAdd from "./pages/CustomerAdd";
 
 function App() {
   const { user, loading, login, logout } = useFrappeSession();
 
+
   if (loading) {
     return <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>Loading session context...</div>;
   }
+  if (!user) return <Login onLogin={login} />;
 
-  return (
-    <div style={{ fontFamily: 'sans-serif', padding: '20px' }}>
-      {user ? (
-        <div style={{ textAlign: 'center' }}>
-          <h1>Authenticated Area</h1>
-          <p>Logged in security identity: <strong>{user}</strong></p>
-          <button onClick={logout} style={{ padding: '8px 16px', color: 'white', backgroundColor: '#e11d48', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-            Terminate Session (Logout)
-          </button>
-        </div>
-      ) : (
-        <Login onLogin={login} />
-      )}
-    </div>
-  );
+    const handleLogout = async () => {
+        await logout();
+  
+    };
+    return (
+      <>
+                  <div style={{ padding: 10, textAlign: "right" }}>
+                <button onClick={handleLogout}>Logout</button>
+            </div>
+    <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<Navigate to="/customers/new" replace />} />
+            <Route path="/customers/new" element={<CustomerAdd logout={logout} />} />
+        </Routes>
+    </BrowserRouter>
+        </>
+    );
 }
 
 export default App;
