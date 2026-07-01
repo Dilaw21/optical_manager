@@ -1,32 +1,24 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
-    plugins: [react()],
-
-    server: {
-        port: 3000,
-
-        proxy: {
-            "/api": {
-                target: "http://artvisionoptical.lan",
-                changeOrigin: true,
-            },
-
-            "/assets": {
-                target: "http://artvisionoptical.lan",
-                changeOrigin: true,
-            },
-
-            "/files": {
-                target: "http://artvisionoptical.lan",
-                changeOrigin: true,
-            },
-        },
+  plugins: [react()],
+  server: {
+    port: 5173,
+    proxy: {
+      // Route all backend calls and methods over to Frappe Bench
+      '/api': {
+        target: 'http://artvisionoptical.lan',
+        changeOrigin: true,
+        secure: false,
+      },
     },
-
-    build: {
-        outDir: "../optical_manager/public/frontend",
-        emptyOutDir: true,
-    },
+  },
+  build: {
+    // Compiles assets directly into the Frappe public asset folder
+    outDir: path.resolve(__dirname, '../optical_app/public/dist'),
+    emptyOutDir: true,
+    assetsDir: 'assets',
+  },
 });
