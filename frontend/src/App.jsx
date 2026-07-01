@@ -19,6 +19,7 @@ function App() {
     };
     return (
       <>
+
                   <div style={{ padding: 10, textAlign: "right" }}>
                 <button onClick={handleLogout}>Logout</button>
             </div>
